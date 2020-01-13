@@ -12,15 +12,7 @@ var diagnoses = [String]()
 var percentDiagnoses = [String]()
 
 class Classifier: UIViewController, AVCaptureVideoDataOutputSampleBufferDelegate {
-    /*
-    let identifierLabel: UILabel = {
-        let label = UILabel()
-        label.backgroundColor = .white
-        label.textAlignment = .center
-        label.translatesAutoresizingMaskIntoConstraints = false
-        return label
-    }()
-    */
+
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -43,33 +35,14 @@ class Classifier: UIViewController, AVCaptureVideoDataOutputSampleBufferDelegate
         dataOutput.setSampleBufferDelegate(self, queue: DispatchQueue(label: "videoQueue"))
         captureSession.addOutput(dataOutput)
         
-        
-        //        VNImageRequestHandler(cgImage: <#T##CGImage#>, options: [:]).perform(<#T##requests: [VNRequest]##[VNRequest]#>)
-        
-  //      setupIdentifierConfidenceLabel()
-    }
-    /*
-    fileprivate func setupIdentifierConfidenceLabel() {
-        view.addSubview(identifierLabel)
-        identifierLabel.bottomAnchor.constraint(equalTo: view.bottomAnchor, constant: -32).isActive = false
-        identifierLabel.leftAnchor.constraint(equalTo: view.leftAnchor).isActive = false
-        identifierLabel.rightAnchor.constraint(equalTo: view.rightAnchor).isActive = false
-        identifierLabel.heightAnchor.constraint(equalToConstant: 50).isActive = false
-    }
-    */
+      
     func captureOutput(_ output: AVCaptureOutput, didOutput sampleBuffer: CMSampleBuffer, from connection: AVCaptureConnection) {
-        //        print("Camera was able to capture a frame:", Date())
         
         guard let pixelBuffer: CVPixelBuffer = CMSampleBufferGetImageBuffer(sampleBuffer) else { return }
         
-        // !!!Important
-        // make sure to go download the models at https://developer.apple.com/machine-learning/ scroll to the bottom
+       
         guard let model = try? VNCoreMLModel(for: ImageClassifier().model) else { return }
         let request = VNCoreMLRequest(model: model) { (finishedReq, err) in
-            
-            //perhaps check the err
-            
-            //            print(finishedReq.results)
             
             guard let results = finishedReq.results as? [VNClassificationObservation] else { return }
             
@@ -111,7 +84,6 @@ class Classifier: UIViewController, AVCaptureVideoDataOutputSampleBufferDelegate
                 
         let sumArray = [sumMM, sumBNM, sumRi, sumMea]
                 
-            //    let diagnosis = sumArray.max()
                 if(sumMM == sumArray.max()!){
                     print("You Have Malignant Melanoma")
                     diagnoses.append("malignantMelanoma")
@@ -161,12 +133,7 @@ class Classifier: UIViewController, AVCaptureVideoDataOutputSampleBufferDelegate
                 
                 
             }
-         /*
-            DispatchQueue.main.async {
-                self.identifierLabel.text = "\(firstObservation.identifier) \(firstObservation.confidence * 100)"
-
-            }
-  */
+         
             
         }
         
